@@ -7,8 +7,9 @@ Steps to setup the project
 1. Clone the project.
 2. Import project into IDE and build.
 3. You should have MongoDB configured in your local system and running.
-4. Run project as spring application.
-5. Use postman or ARC or soup UI for testing.
+4. Update the project with all dependencies using (mvn clean install).
+5. Run project as spring application.
+6. Use postman or ARC or soup UI for testing.
 
 ## Fetch the balance
 
