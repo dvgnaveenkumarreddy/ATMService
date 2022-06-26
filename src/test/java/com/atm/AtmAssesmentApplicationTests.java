@@ -1,5 +1,6 @@
 package com.atm;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,4 +79,22 @@ class AtmAssesmentApplicationTests {
 		mockMvc.perform(put("/api/withdraw").content(json).contentType(MediaType.APPLICATION_JSON)).andExpect(status().is2xxSuccessful());
 	}
 
+	@Test
+	void testWithdrawAmountThrowInvalidDetailException() throws Exception {
+		Withdraw withdraw = new Withdraw();
+		withdraw.setAccountNumber(123456);
+		withdraw.setPin(123);
+		withdraw.setWithdrawAmount(100);
+		Account account = new Account(123456, 1234, 200, 1000.00);
+		Mockito.when(atmMachineRepository.findByAccountNumber(Mockito.anyLong())).thenReturn(account);
+		Mockito.when(atmMachineService.getDetails(withdraw.getAccountNumber(), withdraw.getPin())).thenReturn(account);
+		Denomination denomination = new Denomination(0, 0, 0, 2);
+		AccountResponse accountResponse = new AccountResponse(123456,
+				account.getBalance() - withdraw.getWithdrawAmount(), denomination, "Success!");
+
+		Mockito.when(atmMachineService.withdrawAmount(withdraw)).thenReturn(accountResponse);
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(withdraw);
+		mockMvc.perform(put("/api/withdraw").content(json).contentType(MediaType.APPLICATION_JSON)).andExpect(result -> assertEquals("Invalid Account Number or Pin", result.getResolvedException().getMessage()));
+	}
 }
