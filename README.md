@@ -172,6 +172,7 @@ When Entered amount is Invalid
     "requestedURI": "/api/withdraw"
 }
 ```
+### Test case coverage snippet 
 
 ![image](https://user-images.githubusercontent.com/46936243/175803614-b97432f0-3aae-486a-89bb-a856753db83a.png)
 
